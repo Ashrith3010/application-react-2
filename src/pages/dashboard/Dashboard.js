@@ -1,54 +1,103 @@
-// components/Dashboard.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import DonationManager from './DonationManager';
 import AvailableFood from './FoodAvailability';
 import NGODirectory from './NGODirectory';
 import Contact from './Contact';
 import Header from './Header';
-// import HowItWorks from './HowItWorks'; // Import the HowItWorks component
 import '../styles/dashboard.css';
 
 const Dashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const userType = localStorage.getItem('userType');
-  
-  if (!localStorage.getItem('token')) {
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/stats', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch statistics');
+        }
+
+        const data = await response.json();
+        setStats({
+          donors: data.totalDonors,
+          ngos: data.totalNGOs,
+          donations: data.totalDonations,
+          active: data.activeDonations
+        });
+        setError(null);
+      } catch (err) {
+        setError('Failed to load dashboard statistics');
+        console.error('Error fetching stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+    const intervalId = setInterval(fetchStats, 300000);
+    return () => clearInterval(intervalId);
+  }, [token]);
+
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
-  const stats = [
-    { label: 'Active Donors', value: '500+' },
-    { label: 'NGO Partners', value: '50+' },
-    { label: 'Meals Donated', value: '10,000+' },
-    { label: 'Cities Covered', value: '10+' },
-  ];
-
   return (
-    <div className="dashboard-container">
+    <div>
       <Header userType={userType} />
-
-      <main className="dashboard-main">
+      
+      <main>
         <Routes>
           <Route path="/" element={
-            <div className="welcome-section">
-              <section className="intro">
-                <h1 className="welcome-title">Welcome to Food Donation Network</h1>
-                <p className="welcome-description">Connecting generous donors with NGOs to reduce food waste and feed those in need.</p>
+            <div>
+              <section>
+                <h1>Welcome to Food Donation Network</h1>
+                <p>Connecting generous donors with NGOs to reduce food waste and feed those in need.</p>
               </section>
 
-              <div className="stats-container">
-                {stats.map((stat, index) => (
-                  <div key={index} className="stat-item">
-                    <p className="stat-value">{stat.value}</p>
-                    <p className="stat-label">{stat.label}</p>
-                  </div>
-                ))}
+              {error && <div className="error">{error}</div>}
+
+              <div className="stats">
+                {loading ? (
+                  Array(4).fill(0).map((_, index) => (
+                    <div key={index} className="loading"></div>
+                  ))
+                ) : (
+                  <>
+                    <div>
+                      <p>{stats?.donors || 0}</p>
+                      <p>Active Donors</p>
+                    </div>
+                    <div>
+                      <p>{stats?.ngos || 0}</p>
+                      <p>NGO Partners</p>
+                    </div>
+                    <div>
+                      <p>{stats?.donations || 0}</p>
+                      <p>Total Donations</p>
+                    </div>
+                    <div>
+                      <p>{stats?.active || 0}</p>
+                      <p>Active Donations</p>
+                    </div>
+                  </>
+                )}
               </div>
 
-              <div className="services-section">
-                <div className="donor-services">
-                  <h2 className="services-title">For Donors</h2>
-                  <ul className="services-list">
+              <div className="services">
+                <div>
+                  <h2>For Donors</h2>
+                  <ul>
                     <li>Easy-to-use donation platform</li>
                     <li>Real-time tracking of donations</li>
                     <li>Direct connection with local NGOs</li>
@@ -56,9 +105,9 @@ const Dashboard = () => {
                   </ul>
                 </div>
 
-                <div className="ngo-services">
-                  <h2 className="services-title">For NGOs</h2>
-                  <ul className="services-list">
+                <div>
+                  <h2>For NGOs</h2>
+                  <ul>
                     <li>Real-time food availability updates</li>
                     <li>Efficient claim and pickup system</li>
                     <li>Donor communication platform</li>
@@ -66,12 +115,9 @@ const Dashboard = () => {
                   </ul>
                 </div>
               </div>
-
-              {/* Removed How It Works section */}
             </div>
           } />
-          {/* <Route path="/how-it-works" element={<HowItWorks />} /> Keep this route for the How It Works page */}
-          
+
           {userType === 'donor' && (
             <Route path="/donate" element={<DonationManager />} />
           )}

@@ -1,21 +1,32 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
     margin: 0;
     padding: 0;
+}
+
+/* Styles specifically for the Login page */
+.login-container {
+    background-image: url('../styles/1.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    min-width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-.container1 {
+/* Container styling */
+.in-container {
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
+    z-index: 1;
+    position: relative;
 }
 
 h1 {
@@ -24,17 +35,15 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
+/* Input and button styling */
 input {
     margin-bottom: 1rem;
     padding: 0.5rem;
     border: 1px solid #dddfe2;
     border-radius: 6px;
     font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 button {
@@ -62,6 +71,7 @@ button:hover {
     text-decoration: none;
 }
 
+/* Messages styling */
 .message {
     text-align: center;
     margin-top: 1rem;

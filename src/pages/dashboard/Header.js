@@ -1,6 +1,14 @@
-// Header.jsx
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Apple, 
+  Building2, 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  LogOut 
+} from 'lucide-react';
 import '../styles/header.css';
 
 const Header = () => {
@@ -24,29 +32,42 @@ const Header = () => {
         <nav className="header-nav">
           <div className="nav-links">
             <Link to="/dashboard" className={isActiveLink('/dashboard')}>
-              Dashboard
+              <LayoutDashboard size={20} />
+              <span>Dashboard</span>
             </Link>
+            
             <Link to="/available-food" className={isActiveLink('/available-food')}>
-              Available Food
+              <Apple size={20} />
+              <span>Available Food</span>
             </Link>
+            
             <Link to="/ngo-directory" className={isActiveLink('/ngo-directory')}>
-              NGO Directory
+              <Building2 size={20} />
+              <span>NGO Directory</span>
             </Link>
+            
             {userType === 'donor' && (
               <Link to="/donate" className={isActiveLink('/donate')}>
-                Donate
+                <Heart size={20} />
+                <span>Donate</span>
               </Link>
             )}
+            
             {userType === 'ngo' && (
               <Link to="/donate" className={isActiveLink('/donate')}>
-                Share Food
+                <Share2 size={20} />
+                <span>Share Food</span>
               </Link>
             )}
+            
             <Link to="/contact" className={isActiveLink('/contact')}>
-              Contact
+              <MessageCircle size={20} />
+              <span>Contact</span>
             </Link>
+            
             <button onClick={handleLogout} className="logout-button">
-              Logout
+              <LogOut size={20} />
+              <span>Logout</span>
             </button>
           </div>
         </nav>

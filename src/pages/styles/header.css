@@ -1,65 +1,218 @@
-/* Header Styles */
+/* General styles */
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 20px; /* Decreased header height */
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
 .header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
   height: 100%;
+  padding: 0 24px;
+  background-color: #ffffff;
 }
 
 .header-nav {
   height: 100%;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Ensure alignment across the width */
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  width: 100%;
+  padding-right: 24px;
+  gap: 30px; /* Reduced gap between nav items */
 }
 
 .nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: #4a5568;
   text-decoration: none;
   font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  padding: 8px 20px;
+  height: 20px; /* Fixed height for better background display */
+  font-size: 14px; /* Reduced font size */
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-radius: 8px; /* Rounded corners */
 }
 
 .nav-link:hover {
-  color: #2d3748;
-  background-color: #f7fafc;
+  color: #3182ce;
+  background-color: #f0f9ff; /* Light blue background on hover */
 }
 
 .nav-link.active {
   color: #3182ce;
-  background-color: #ebf8ff;
+  background-color: #e0f2fe; /* Slightly darker blue background for active state */
+  font-weight: 600; /* Make active text slightly bolder */
 }
 
-.header-logout {
-  background-color: #e53e3e;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
+/* Remove the underline animation since we're using background color */
+.nav-link::after {
+  display: none;
+}
+
+.nav-link svg {
+  width: 18px; /* Adjusted icon size */
+  height: 18px; /* Adjusted icon size */
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover svg {
+  transform: translateY(-2px);
+}
+
+/* Add subtle separator between nav items */
+.nav-link:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  width: 1px;
+  background-color: #e2e8f0;
+  opacity: 0.6;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff1f2;
+  color: #e11d48;
+  padding: 8px 20px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  height: 30px; /* Match height of nav links */
+  margin-left: 240px;
+  white-space: nowrap;
 }
 
-.header-logout:hover {
-  background-color: #c53030;
+.logout-button:hover {
+  background-color: #e11d48;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(225, 29, 72, 0.2);
+}
+
+.logout-button svg {
+  width: 18px; /* Adjusted icon size */
+  height: 18px; /* Adjusted icon size */
+  transition: transform 0.3s ease;
+}
+
+.logout-button:hover svg {
+  transform: rotate(90deg);
+}
+
+/* Color variations for different sections - you can customize these */
+.nav-link[href="/dashboard"].active {
+  background-color: #e0f2fe; /* Blue */
+  color: #2563eb;
+}
+
+.nav-link[href="/available-food"].active {
+  background-color: #ecfdf5; /* Green */
+  color: #059669;
+}
+
+.nav-link[href="/ngo-directory"].active {
+  background-color: #f3f3e2; /* Pink */
+  color: #b2e614;
+}
+
+.nav-link[href="/donate"].active {
+  background-color: #fff7ed; /* Orange */
+  color: #ea580c;
+}
+
+.nav-link[href="/contact"].active {
+  background-color: #f5f3ff; /* Purple */
+  color: #7c3aed;
+}
+
+/* Add responsive styles */
+@media (max-width: 1200px) {
+  .nav-links {
+    gap: 24px; /* Reduced gap for smaller screens */
+  }
+  
+  .nav-link::before {
+    right: -16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  .nav-links {
+    gap: 18px;
+    padding-right: 16px;
+  }
+  
+  .nav-link {
+    padding: 8px 16px;
+    font-size: 13px; /* Further reduce font size */
+  }
+  
+  .nav-link::before {
+    right: -12px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 12px;
+  }
+
+  .nav-links {
+    gap: 12px; /* Reduced gap for smaller screens */
+    padding-right: 12px;
+  }
+  
+  .nav-link {
+    padding: 8px;
+    font-size: 12px; /* Further reduced font size */
+  }
+  
+  .nav-link span {
+    display: none;
+  }
+  
+  .nav-link::before {
+    display: none;
+  }
+  
+  .logout-button {
+    padding: 8px;
+  }
+  
+  .logout-button span {
+    display: none;
+  }
 }

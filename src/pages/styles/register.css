@@ -1,17 +1,23 @@
+/* Global styles */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('../styles/1.webp'); /* Adjust path as needed */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     margin: 0;
     padding: 0;
+}
+
+/* Styles specifically for the Register page */
+.register-page {
+    background-image: url('../styles/1.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    min-width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
+/* Container styling */
 .container1 {
     background-color: white;
     padding: 2rem;
@@ -29,12 +35,9 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-input, .form-select {
+/* Input and button styling */
+input,
+.form-select {
     margin-bottom: 1rem;
     padding: 0.5rem;
     border: 1px solid #dddfe2;
@@ -42,25 +45,6 @@ input, .form-select {
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
-}
-
-/* Adjusting select element styling to match input fields */
-.form-select {
-    appearance: none;
-    -webkit-appearance: none; /* for Safari */
-    -moz-appearance: none; /* for Firefox */
-    background-color: white;
-    color: #333;
-}
-
-/* Optional: Add a custom arrow icon for dropdown */
-.form-select::after {
-    content: '';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
 }
 
 button {
@@ -88,7 +72,9 @@ button:hover {
     text-decoration: none;
 }
 
-.message {
+/* Messages styling */
+.error-message,
+.success-message {
     text-align: center;
     margin-top: 1rem;
     color: #42b72a;

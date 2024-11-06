@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import '../styles/contact.css';
- 
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -9,18 +9,18 @@ const Contact = () => {
     message: '',
   });
   const [status, setStatus] = useState('');
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-   
+
     // Get the authentication token from localStorage
     const token = localStorage.getItem('token');
-   
+
     if (!token) {
       setStatus('Please log in to send a message.');
       return;
     }
- 
+
     try {
       const response = await fetch('http://localhost:3000/api/contact', {
         method: 'POST',
@@ -30,9 +30,9 @@ const Contact = () => {
         },
         body: JSON.stringify(formData),
       });
- 
+
       const data = await response.json();
- 
+
       if (response.ok) {
         setStatus('Message sent successfully!');
         setFormData({ name: '', email: '', message: '' });
@@ -43,18 +43,18 @@ const Contact = () => {
       setStatus(`Failed to send message: ${error.message}`);
     }
   };
- 
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
- 
+
   return (
     <div className="contact-page-wrapper">
       <Header />
-      <div className="contact-main-container">
+      <div className="contact-box">
         <h2 className="contact-heading">Contact Us</h2>
         <form onSubmit={handleSubmit} className="contact-form-container">
           <div className="contact-form-group">
@@ -68,7 +68,7 @@ const Contact = () => {
               required
             />
           </div>
-         
+
           <div className="contact-form-group">
             <label className="contact-form-label">Email</label>
             <input
@@ -80,7 +80,7 @@ const Contact = () => {
               required
             />
           </div>
-         
+
           <div className="contact-form-group">
             <label className="contact-form-label">Message</label>
             <textarea
@@ -92,12 +92,12 @@ const Contact = () => {
               required
             />
           </div>
-         
+
           <button type="submit" className="contact-submit-button">
             Send Message
           </button>
         </form>
-       
+
         {status && (
           <div className={`contact-status-message ${
             status.includes('Failed') ? 'contact-status-error' : 'contact-status-success'
@@ -109,5 +109,5 @@ const Contact = () => {
     </div>
   );
 };
- 
+
 export default Contact;
