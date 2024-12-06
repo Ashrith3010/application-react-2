@@ -101,6 +101,26 @@ const Register = () => {
                         <option value="donor">Donor</option>
                         <option value="ngo">NGO</option>
                     </select>
+                    {formData.userType === 'ngo' && (
+<>
+<input
+                            type="text"
+                            name="organization"
+                            value={formData.organization}
+                            onChange={handleChange}
+                            placeholder="Organization Name"
+                            required
+                        />
+<input
+                            type="text"
+                            name="area"
+                            value={formData.area}
+                            onChange={handleChange}
+                            placeholder="Service Area"
+                            required
+                        />
+</>
+                )}
                     <button type="submit" className="submit-button">Register</button>
                 </form>
                 <p className="switch-form">

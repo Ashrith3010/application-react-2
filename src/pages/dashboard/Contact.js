@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import '../styles/contact.css';
+import ContactImage from '../styles/contact.jpg';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,13 +9,36 @@ const Contact = () => {
     email: '',
     message: '',
   });
+
   const [status, setStatus] = useState('');
+
+  // Load user information on component mount
+  useEffect(() => {
+    // Retrieve user information from localStorage
+    const username = localStorage.getItem('username');
+    const email = localStorage.getItem('email');
+
+    console.log('Stored Username:', username);
+    console.log('Stored Email:', email);
+
+    // Pre-fill form with user information if available
+    if (username || email) {
+      setFormData(prevData => ({
+        ...prevData,
+        name: username || '',
+        email: email || ''
+      }));
+    } else {
+      console.warn('No username or email found in localStorage');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Get the authentication token from localStorage
     const token = localStorage.getItem('token');
+    console.log('Token:', token);
 
     if (!token) {
       setStatus('Please log in to send a message.');
@@ -26,21 +50,24 @@ const Contact = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Add the authentication token
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-
       if (response.ok) {
         setStatus('Message sent successfully!');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData(prevData => ({
+          ...prevData,
+          message: '' // Keep name and email, clear only message
+        }));
       } else {
         throw new Error(data.message || 'Failed to send message');
       }
     } catch (error) {
       setStatus(`Failed to send message: ${error.message}`);
+      console.error('Submit error:', error);
     }
   };
 
@@ -54,57 +81,62 @@ const Contact = () => {
   return (
     <div className="contact-page-wrapper">
       <Header />
-      <div className="contact-box">
-        <h2 className="contact-heading">Contact Us</h2>
-        <form onSubmit={handleSubmit} className="contact-form-container">
-          <div className="contact-form-group">
-            <label className="contact-form-label">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="contact-form-input"
-              required
-            />
-          </div>
-
-          <div className="contact-form-group">
-            <label className="contact-form-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="contact-form-input"
-              required
-            />
-          </div>
-
-          <div className="contact-form-group">
-            <label className="contact-form-label">Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows="4"
-              className="contact-form-textarea"
-              required
-            />
-          </div>
-
-          <button type="submit" className="contact-submit-button">
-            Send Message
-          </button>
-        </form>
-
-        {status && (
-          <div className={`contact-status-message ${
-            status.includes('Failed') ? 'contact-status-error' : 'contact-status-success'
-          }`}>
-            {status}
-          </div>
-        )}
+      <div className="contact-form-container">
+        <div className="contact-form-wrapper">
+          <h2 className="contact-heading">Let's talk about everything!</h2>
+          <form onSubmit={handleSubmit} className="contact-form">
+            <div className="contact-form-group">
+              <input
+                type="text"
+                name="name"
+                placeholder="Your name"
+                value={formData.name}
+                onChange={handleChange}
+                className="contact-form-input"
+                required
+              />
+            </div>
+            <div className="contact-form-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                className="contact-form-input"
+                required
+              />
+            </div>
+            <div className="contact-form-group">
+              <textarea
+                name="message"
+                placeholder="Write your message"
+                value={formData.message}
+                onChange={handleChange}
+                rows="4"
+                className="contact-form-textarea"
+                required
+              />
+            </div>
+            <button type="submit" className="contact-submit-button">
+              Send Message
+            </button>
+          </form>
+          {status && (
+            <div
+              className={`contact-status-message ${
+                status.includes('Failed')
+                  ? 'contact-status-error'
+                  : 'contact-status-success'
+              }`}
+            >
+              {status}
+            </div>
+          )}
+        </div>
+        <div className="contact-image-container">
+          <img src={ContactImage} alt="Contact" />
+        </div>
       </div>
     </div>
   );
